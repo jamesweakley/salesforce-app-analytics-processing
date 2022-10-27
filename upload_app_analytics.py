@@ -22,11 +22,12 @@ con = snowflake.connector.connect(
     schema=snowflake_schema
 )
 
-# upload the CSV to
+# upload the CSV to the table's stage
 results = con.cursor().execute("PUT file://download.csv @%APP_ANALYTICS OVERWRITE = TRUE")
 for rec in results:
     print('%s' % (rec[0]))
 
+# load the CSV from the table stage into the table
 results = con.cursor().execute("COPY INTO APP_ANALYTICS "
     "FILE_FORMAT = ( TYPE = CSV FIELD_OPTIONALLY_ENCLOSED_BY = '\"' SKIP_HEADER = 1)")
 for rec in results:
